@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import * as React from "react";
-
+import { useAuth } from "../auth/auth-context";
 import VisuallyHidden from "@reach/visually-hidden";
 import { CircleButton, Button, FormGroup, Dialog } from "components/lib";
 import { Logo } from "components/logo";
 import { Input } from "components/lib";
-
+import { useAsync } from "../utils/hooks";
 function LoginForm({ onSubmit, buttonText }) {
   function handleSubmit(event) {
     event.preventDefault();
@@ -67,12 +67,21 @@ function Modal({ button, label, children }) {
 }
 
 export default function App() {
+  const { signup, signin } = useAuth();
+  const { data, error, run, isLoading, isError, isSuccess } = useAsync();
+  console.log(data);
+  console.log(isLoading);
+  console.log(isSuccess);
+  console.log(isError);
+  console.log(error);
   function login(formData) {
-    console.log("login", formData);
+    const { username, password } = formData;
+    run(signin(username, password));
   }
 
   function register(formData) {
-    console.log("register", formData);
+    const { username, password } = formData;
+    signup(username, password);
   }
 
   return (

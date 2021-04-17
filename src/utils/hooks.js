@@ -56,9 +56,8 @@ function useAsync(initialState) {
           return data;
         },
         error => {
-          error.then(err => {
-            setError(err.error);
-          });
+          setError(error);
+          return error;
         }
       );
     },
