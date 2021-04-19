@@ -7,10 +7,10 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 import { Input, Spinner, BookListUL } from "components/lib";
 import BookRow from "components/book-row";
 import client from "utils/api-client";
-import bookModel from "utils/book-model";
+import { bookModel } from "utils/book-model";
 import { useAsync } from "utils/hooks";
 
-function DiscoverBooksScreen() {
+function DiscoverBooksScreen({ user }) {
   const { data, error, run, isLoading, isError, isSuccess } = useAsync();
   const [query, setQuery] = useState("");
   const [queried, setQueried] = useState(false);
@@ -24,7 +24,7 @@ function DiscoverBooksScreen() {
       return;
     }
 
-    run(client(query));
+    run(client(`?q=${query}`));
   }, [query, queried, run]);
 
   function handleSearchSubmit(event) {

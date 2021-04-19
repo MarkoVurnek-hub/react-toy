@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useAuth } from "../auth/auth-context";
 import { useAsync } from "../utils/hooks";
 import Dashboard from "./dashboard";
@@ -24,10 +25,13 @@ function App() {
   if (isLoading || isIdle) {
     return <FullPageSpinner />;
   }
+  const props = { user, logout, register, login };
   return user ? (
-    <Dashboard user={user} logout={logout} />
+    <Router>
+      <Dashboard {...props} />
+    </Router>
   ) : (
-    <Entry login={login} register={register} />
+    <Entry {...props} />
   );
 }
 
