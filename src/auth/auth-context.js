@@ -8,7 +8,8 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = React.useState();
+  const [currentUser, setCurrentUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
   const signup = (email, password) => {
     return auth.createUserWithEmailAndPassword(email, password);
@@ -16,18 +17,32 @@ export function AuthProvider({ children }) {
   const signin = (email, password) => {
     return auth.signInWithEmailAndPassword(email, password);
   };
+  const signout = () => {
+    return auth.signOut();
+  };
+  const handleAuthChange = () => {
+    return auth.onAuthStateChanged(user => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+  };
 
   React.useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-    });
-    return unsubscribe;
+    const unsubscribe = handleAuthChange();
+
+    return () => unsubscribe();
   }, []);
 
   const value = {
-    currentUser,
     signup,
-    signin
+    signin,
+    signout,
+    currentUser,
+    loading
   };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 }
